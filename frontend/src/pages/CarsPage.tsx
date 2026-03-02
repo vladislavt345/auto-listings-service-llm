@@ -28,10 +28,6 @@ export function CarsPage(): ReactElement {
     navigate("/login");
   }
 
-  if (isLoading) {
-    return <div className="page-loading">Loading listings</div>;
-  }
-
   return (
     <div className="app-shell">
       {/* ── header ── */}
@@ -58,6 +54,7 @@ export function CarsPage(): ReactElement {
         <div className="section-label">
           <span className="dot" />
           Car Listings
+          {isLoading && <span className="fetching-label">fetching…</span>}
         </div>
 
         <div className="filters-bar">
@@ -68,7 +65,7 @@ export function CarsPage(): ReactElement {
           <div className="error-bar">Failed to load car listings</div>
         )}
 
-        <div className="table-wrap">
+        <div className={`table-wrap${isLoading ? " table-wrap--loading" : ""}`}>
           <CarTable cars={cars} />
         </div>
       </main>
