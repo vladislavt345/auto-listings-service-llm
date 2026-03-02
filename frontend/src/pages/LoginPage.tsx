@@ -5,9 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../api/auth";
 import { saveToken } from "../utils/token";
 
-/**
- * Login page for admin panel access.
- */
 export function LoginPage(): ReactElement {
   const navigate = useNavigate();
   const [username, setUsername] = useState<string>("admin");
@@ -31,23 +28,41 @@ export function LoginPage(): ReactElement {
   }
 
   return (
-    <div className="page-center">
-      <form className="card" onSubmit={onSubmit}>
-        <h1>Admin Login</h1>
+    <div className="grid-bg login-bg">
+      <form className="login-card" onSubmit={onSubmit}>
+        <div>
+          <p className="login-service">
+            <span className="dot" />
+            Auto-Listings
+          </p>
+          <p className="login-title">Admin Login</p>
+        </div>
         <input
+          className="login-input"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Username"
+          autoComplete="username"
         />
         <input
+          className="login-input"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           placeholder="Password"
+          autoComplete="current-password"
         />
-        {error && <p className="error">{error}</p>}
-        <button disabled={loading} type="submit">
-          {loading ? "Signing in..." : "Sign in"}
+        {error && (
+          <p className="login-error">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+              <circle cx="6" cy="6" r="5.5" stroke="currentColor" strokeWidth="1" fill="none"/>
+              <path d="M6 3.5v3M6 8.5v.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+            </svg>
+            {error}
+          </p>
+        )}
+        <button className="btn-primary" disabled={loading} type="submit">
+          {loading ? "Signing in…" : "Sign in"}
         </button>
       </form>
     </div>

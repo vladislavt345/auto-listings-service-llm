@@ -1,17 +1,19 @@
 import type { ReactElement } from 'react'
-
 import type { Car } from '../types/car'
 
 type Props = {
   cars: Car[]
 }
 
-/**
- * Cars data table.
- */
 export function CarTable({ cars }: Props): ReactElement {
+  if (cars.length === 0) {
+    return (
+      <div className="table-empty">No listings found</div>
+    )
+  }
+
   return (
-    <table>
+    <table className="cars-table">
       <thead>
         <tr>
           <th>Make</th>
@@ -25,13 +27,18 @@ export function CarTable({ cars }: Props): ReactElement {
       <tbody>
         {cars.map((car: Car) => (
           <tr key={car.id}>
-            <td>{car.make}</td>
+            <td className="c-make">{car.make}</td>
             <td>{car.model}</td>
-            <td>{car.year}</td>
-            <td>{car.price}</td>
-            <td>{car.color}</td>
+            <td className="c-year">{car.year}</td>
+            <td className="c-price">{Number(car.price).toLocaleString()}</td>
             <td>
-              <a href={car.source_url} target="_blank" rel="noreferrer">
+              <span className="color-pill">
+                <span className="color-dot" />
+                {car.color}
+              </span>
+            </td>
+            <td>
+              <a className="link-open" href={car.source_url} target="_blank" rel="noreferrer">
                 Open
               </a>
             </td>
