@@ -9,10 +9,11 @@ Service for collecting car listings, viewing them in an admin panel, and searchi
 - Worker: ARQ + Redis queue for periodic listing sync
 - Bot: Telegram + OpenAI Function Calling
 
-## Run
+## Setup & Run
 
 ```bash
 cp .env.example .env
+# Fill in TELEGRAM_BOT_TOKEN and LLM_API_KEY if needed, then:
 docker-compose up --build
 ```
 
@@ -33,15 +34,30 @@ docker-compose up --build
 
 ## Architecture
 
-- `backend/src/api`: routes and dependencies
-- `backend/src/services`: business logic only
-- `backend/src/clients`: external API clients
-- `backend/src/core`: security/core utilities
-- `backend/src/fixtures`: seed data scripts
-- `backend/src/repositories`: database access
-- `backend/src/tasks`: ARQ jobs and worker config
-- `bot/src`: Telegram bot + LLM parser (separate service)
-- `frontend/src`: SPA
+```
+backend/src/
+  api/          # Routes and JWT bearer dependency
+  services/     # Business logic, no direct DB access
+  repositories/ # Database queries via SQLAlchemy async
+  adapters/     # External data source adapters (CarSensor); swap without touching services
+  core/         # JWT creation/validation, bcrypt password hashing
+  tasks/        # ARQ cron job for periodic listing sync with retry/backoff
+  fixtures/     # Admin user seeding (runs before server start)
+bot/src/
+  filter_parser.py  # OpenAI Responses API function-calling; regex fallback if no key
+  main.py           # aiogram Telegram dispatcher
+frontend/src/   # React SPA, React Query, Axios with JWT interceptor
+```
+
+**Key decisions:**
+
+- **FastAPI + async SQLAlchemy** — native async stack avoids thread overhead under I/O-heavy scraping load.
+- **Repository pattern** — services depend on protocols, not concrete classes; simplifies unit testing and swapping DB backends.
+- **Adapter pattern for scrapers** — `BaseListingsAdapter` lets new sources be added without touching sync logic or services.
+- **ARQ + Redis** — lightweight task queue that fits a single-service deployment; cron built-in, no Celery overhead.
+- **Upsert by `source_url`** — idempotent sync: re-running never creates duplicates, only updates changed fields.
+- **OpenAI Responses API with regex fallback** — bot works without an API key; LLM improves filter extraction when available.
+- **Alembic migrations + seed script** — schema versioned from day one; admin account created automatically on first start.
 
 ## Notes
 
@@ -52,6 +68,5 @@ docker-compose up --build
 ## Tests
 
 ```bash
-pip install -r backend/requirements-dev.txt
-pytest backend/tests
+cd backend && uv run pytest tests/
 ```
