@@ -340,3 +340,61 @@ body { height: 100vh; overflow: hidden; }
   align-items: center;
   gap: 5px;
 }
+
+/* ── hide number input spinners ───────────────────────── */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ── responsive ───────────────────────────────────────── */
+
+/* tablet: tighten padding, let filters wrap */
+@media (max-width: 900px) {
+  .app-main { padding: 14px 14px; }
+  .hdr-crumb { display: none; }
+  .hdr-sep   { display: none; }
+  .f-input   { min-width: 90px; flex: 1 1 90px; }
+  .filters-bar { flex-wrap: wrap; }
+}
+
+/* mobile: collapse sidebar, allow vertical scroll */
+@media (max-width: 600px) {
+  body { height: auto; overflow: auto; }
+
+  .app-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 44px 1fr;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .app-sidebar { display: none; }
+
+  .app-main {
+    overflow: visible;
+    padding: 12px;
+  }
+
+  .hdr-stat  { display: none; }
+
+  /* table scrolls horizontally */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cars-table { min-width: 560px; }
+
+  /* filters stack to 2 columns */
+  .filters-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .f-input { min-width: unset; width: 100%; }
+
+  /* login card full-width with padding */
+  .login-card { max-width: 100%; margin: 0 16px; }
+}
