@@ -2,8 +2,8 @@
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.jwt import create_access_token
-from src.core.password import verify_password
+from src.security.jwt import create_access_token
+from src.security.password import verify_password
 from src.repositories.protocols import UserRepositoryProtocol
 from src.repositories.user_repository import UserRepository
 from src.schemas.auth import TokenResponse

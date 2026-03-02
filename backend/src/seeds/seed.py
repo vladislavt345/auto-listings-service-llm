@@ -3,7 +3,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config.settings import get_settings
-from src.core.password import hash_password
+from src.security.password import hash_password
 from src.repositories.user_repository import UserRepository
 
 

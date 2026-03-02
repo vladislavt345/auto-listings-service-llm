@@ -3,7 +3,7 @@
 import asyncio
 
 from src.db.session import session_scope
-from src.fixtures.seed import seed_admin
+from src.seeds.seed import seed_admin
 
 
 async def main() -> None:

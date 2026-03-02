@@ -5,7 +5,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.constants import ERROR_INVALID_TOKEN, ERROR_USER_NOT_FOUND
-from src.core.jwt import decode_token
+from src.security.jwt import decode_token
 from src.db.session import get_db
 from src.models.user import User
 from src.repositories.protocols import UserRepositoryProtocol
